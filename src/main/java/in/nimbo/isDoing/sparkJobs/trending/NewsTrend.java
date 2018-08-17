@@ -27,6 +27,8 @@ public class NewsTrend extends Trend {
         logger.info("Setup Spark Configuration");
         String master = configs.get("trending.newsTrend.spark.master");
         long durationsSecond = Long.parseLong(configs.get("trending.newsTrend.spark.durationsSecond"));
+        stopWordLength = Integer.parseInt(configs.get("trending.newsTrend.spark.stopWordLength"));
+
 
         logger.info("Setup Kafka Configuration");
         String brokers = configs.get("trending.newsTrend.kafka.brokers");
