@@ -27,6 +27,7 @@ import java.util.*;
 public class Trend implements Service {
     static final Logger logger = LoggerFactory.getLogger(Trend.class.getSimpleName());
     static final String SPACE = "\\W";
+    public static final int STOP_WORD_LENGTH = 0;
 
     JavaStreamingContext javaStreamingContext;
 
@@ -63,7 +64,7 @@ public class Trend implements Service {
         // Get the lines, split them into words, count the words and print
         // Removing stop words
         JavaDStream<String> lines = messages.map(ConsumerRecord::value);
-        JavaDStream<String> words = lines.flatMap(x -> Arrays.stream(x.split(SPACE)).filter(s -> s.length() > 0).iterator());
+        JavaDStream<String> words = lines.flatMap(x -> Arrays.stream(x.split(SPACE)).filter(s -> s.length() > STOP_WORD_LENGTH).iterator());
 
         // Calculate count of each word
         JavaPairDStream<String, Integer> wordCounts = words.mapToPair(s -> new Tuple2<>(s, 1))
