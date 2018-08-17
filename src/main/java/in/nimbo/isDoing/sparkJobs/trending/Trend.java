@@ -40,6 +40,7 @@ public class Trend implements Service {
     String hBaseTableName;
     String hBaseColumnFamily;
     String quantifier;
+    int stopWordLength;
     int trendNumber;
 
     public Trend(Configs configs) {
@@ -62,14 +63,14 @@ public class Trend implements Service {
         // Get the lines, split them into words, count the words and print
         // Removing stop words
         JavaDStream<String> lines = messages.map(ConsumerRecord::value);
-        JavaDStream<String> words = lines.flatMap(x -> Arrays.stream(x.split(SPACE)).filter(s -> s.length() > 3).iterator());
+        JavaDStream<String> words = lines.flatMap(x -> Arrays.stream(x.split(SPACE)).filter(s -> s.length() > 0).iterator());
 
         // Calculate count of each word
         JavaPairDStream<String, Integer> wordCounts = words.mapToPair(s -> new Tuple2<>(s, 1))
                 .reduceByKey((i1, i2) -> i1 + i2);
 
         // Sort words to find trending words
-        JavaPairDStream<Integer, String> swappedPair = wordCounts.mapToPair(x -> x.swap());
+        JavaPairDStream<Integer, String> swappedPair = wordCounts.mapToPair(Tuple2::swap);
         JavaPairDStream<Integer, String> sortedWords = swappedPair.transformToPair(
                 (Function<JavaPairRDD<Integer, String>, JavaPairRDD<Integer, String>>) jPairRDD -> jPairRDD.sortByKey(false));
 
