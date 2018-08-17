@@ -10,6 +10,7 @@ import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.Int;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class TwitterTrend extends Trend {
     void setUpConfig() {
         logger.info("Setup Spark Configuration");
         String master = configs.get("trending.twitterTrend.spark.master");
+        stopWordLength = Integer.parseInt(configs.get("trending.twitterTrend.spark.stopWordLength"));
         long durationsSecond = Long.parseLong(configs.get("trending.twitterTrend.spark.durationsSecond"));
 
         logger.info("Setup Kafka Configuration");
