@@ -25,7 +25,6 @@ public class Main {
             throw new IllegalStateException("roblem when creating instance of TrendServiceManagerConfigs");
         }
 
-//        TrendServiceManager trendServiceManager = new TrendServiceManager(trendServiceManagerConfigs);
         trendServiceManager.startService(appName);
     }
 
